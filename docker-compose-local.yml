@@ -7,9 +7,12 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.local
-    command: bash -c "gunicorn --bind :8000 --workers 3  --reload --timeout 3600 stylelab.wsgi"
+    command: gunicorn --bind :8000 --workers 3  --reload --timeout 3600 artists.wsgi
+    restart: always
     environment:
       DJANGO_SETTINGS_MODULE: 'artists.settings.local'
+    env_file:
+      - .env
     logging:
       options:
         max-size: 50m
@@ -17,7 +20,7 @@ services:
       - postgres
     volumes:
       - staticRoot:/artists/artists/static
-      - ./:/home/app_user/
+      - .:/code/
     expose:
       - "8000"
     ports:
@@ -25,11 +28,14 @@ services:
 
   celery:
     command: celery -A artists worker -l info --queues celery,celery-email
+    restart: always
     build:
       context: .
       dockerfile: Dockerfile.local
     environment:
-      DJANGO_SETTINGS_MODULE: 'stylelab.settings.local'
+      DJANGO_SETTINGS_MODULE: 'artists.settings.local'
+    env_file:
+      - .env
     logging:
       options:
         max-size: 50m
@@ -37,17 +43,18 @@ services:
       - postgres
       - rabbit
     volumes:
-      - stylelab_static_volume:/stylelab/stylelab/static
-      - stylelab_media_volume:/stylelab/media
-      - ./:/home/app_user/
+      - artists_static_volume:/artists/artists/static
+      - artists_media_volume:/artists/media
+      - .:/code/
 
   celery-beat:
-    command: celery -A stylelab beat -l info
+    command: celery -A artists beat -l info
+    restart: always
     build:
       context: .
       dockerfile: Dockerfile.local
-    environment:
-      DJANGO_SETTINGS_MODULE: 'stylelab.settings.local'
+    env_file:
+      - .env
     logging:
       options:
         max-size: 50m
@@ -55,9 +62,7 @@ services:
       - postgres
       - rabbit
     volumes:
-      - stylelab_static_volume:/stylelab/stylelab/static
-      - stylelab_media_volume:/stylelab/media
-      - ./:/home/app_user/
+      - .:/code
 
 
   rabbit:
@@ -73,9 +78,9 @@ services:
     image: postgres:13.5-alpine
     restart: always
     environment:
-      - POSTGRES_USER=stylelab
-      - POSTGRES_PASSWORD=stylelab
-      - POSTGRES_DB=stylelab
+      - POSTGRES_USER=artists
+      - POSTGRES_PASSWORD=artists
+      - POSTGRES_DB=artists
     ports:
       - '5433:5432'
     volumes:
@@ -84,7 +89,6 @@ services:
 volumes:
   db:
   staticRoot:
-  testDb:
-  stylelab_static_volume:
-  stylelab_media_volume:
+  artists_static_volume:
+  artists_media_volume:
 
