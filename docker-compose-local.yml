@@ -1,0 +1,90 @@
+version: '3.3'
+
+services:
+
+  backend:
+    container_name: artists_backend
+    build:
+      context: .
+      dockerfile: Dockerfile.local
+    command: bash -c "gunicorn --bind :8000 --workers 3  --reload --timeout 3600 stylelab.wsgi"
+    environment:
+      DJANGO_SETTINGS_MODULE: 'artists.settings.local'
+    logging:
+      options:
+        max-size: 50m
+    depends_on:
+      - postgres
+    volumes:
+      - staticRoot:/artists/artists/static
+      - ./:/home/app_user/
+    expose:
+      - "8000"
+    ports:
+      - "8000:8000"
+
+  celery:
+    command: celery -A artists worker -l info --queues celery,celery-email
+    build:
+      context: .
+      dockerfile: Dockerfile.local
+    environment:
+      DJANGO_SETTINGS_MODULE: 'stylelab.settings.local'
+    logging:
+      options:
+        max-size: 50m
+    depends_on:
+      - postgres
+      - rabbit
+    volumes:
+      - stylelab_static_volume:/stylelab/stylelab/static
+      - stylelab_media_volume:/stylelab/media
+      - ./:/home/app_user/
+
+  celery-beat:
+    command: celery -A stylelab beat -l info
+    build:
+      context: .
+      dockerfile: Dockerfile.local
+    environment:
+      DJANGO_SETTINGS_MODULE: 'stylelab.settings.local'
+    logging:
+      options:
+        max-size: 50m
+    depends_on:
+      - postgres
+      - rabbit
+    volumes:
+      - stylelab_static_volume:/stylelab/stylelab/static
+      - stylelab_media_volume:/stylelab/media
+      - ./:/home/app_user/
+
+
+  rabbit:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+    hostname: rabbit
+    environment:
+      - RABBITMQ_DEFAULT_USER=admin
+      - RABBITMQ_DEFAULT_PASS=password
+
+  postgres:
+    image: postgres:13.5-alpine
+    restart: always
+    environment:
+      - POSTGRES_USER=stylelab
+      - POSTGRES_PASSWORD=stylelab
+      - POSTGRES_DB=stylelab
+    ports:
+      - '5433:5432'
+    volumes:
+      - db:/var/lib/postgresql/data
+
+volumes:
+  db:
+  staticRoot:
+  testDb:
+  stylelab_static_volume:
+  stylelab_media_volume:
+
