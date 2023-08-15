@@ -13,5 +13,5 @@ logger = logging.getLogger(__name__)
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', os.environ.get("DJANGO_SETTINGS_MODULE"))
 
 app = Celery('artists')
-app.config_from_object('django.conf:settings')
+app.config_from_object("django.conf:settings", namespace="CELERY")
 app.autodiscover_tasks()

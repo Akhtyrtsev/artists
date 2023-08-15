@@ -15,3 +15,7 @@ DATABASES = {
         "TEST": {"NAME": "artsists_test"},
     },
 }
+
+CELERY_BROKER_URL = os.environ.get("CELERY_BROKER_URL")
+RABBIT_USERNAME = os.environ.get("RABBIT_USERNAME")
+RABBIT_PASSWORD = os.environ.get("RABBIT_USERNAME")
