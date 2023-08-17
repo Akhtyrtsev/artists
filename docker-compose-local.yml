@@ -46,6 +46,30 @@ services:
       - artists_static_volume:/artists/artists/static
       - artists_media_volume:/artists/media
       - .:/code/
+  flower:
+    command: celery -A artists flower --basic_auth=admin:admin
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile.local
+    environment:
+      DJANGO_SETTINGS_MODULE: 'artists.settings.local'
+    env_file:
+      - .env
+    logging:
+      options:
+        max-size: 50m
+    depends_on:
+      - celery
+      - rabbit
+    expose:
+      - "5555"
+    ports:
+      - "5555:5555"
+    volumes:
+      - artists_static_volume:/artists/artists/static
+      - artists_media_volume:/artists/media
+      - .:/code/
 
   celery-beat:
     command: celery -A artists beat -l info
