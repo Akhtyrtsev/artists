@@ -12,8 +12,15 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 import sentry_sdk
+import datetime
 from sentry_sdk.integrations.django import DjangoIntegration
 import os
+import django
+from django.utils.encoding import smart_str
+from django.utils.translation import gettext
+django.utils.translation.ugettext = gettext
+django.utils.encoding.smart_text = smart_str
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -40,6 +47,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'drf_yasg',
+    'api',
 ]
 
 MIDDLEWARE = [
@@ -140,5 +148,18 @@ sentry_sdk.init(
     traces_sample_rate=1.0,
     profiles_sample_rate=1.0,
 )
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+    ),
+}
+
+# JWT settings
+JWT_AUTH = {
+    'JWT_ALLOW_REFRESH': True,
+    'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(days=7),
+    'JWT_AUTH_HEADER_PREFIX': 'Bearer',
+}
 
 

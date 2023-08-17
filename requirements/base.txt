@@ -15,6 +15,7 @@ Django==4.2.4
 django-rest-framework==0.1.0
 django-silk==5.0.3
 djangorestframework==3.14.0
+djangorestframework-jwt==1.11.0
 drf-yasg==1.21.7
 flower==2.0.1
 gprof2dot==2022.7.29
@@ -31,6 +32,7 @@ prometheus-client==0.17.1
 prompt-toolkit==3.0.39
 psycopg==3.1.10
 pycodestyle==2.11.0
+PyJWT==1.7.1
 python-dateutil==2.8.2
 pytz==2023.3
 PyYAML==6.0.1
