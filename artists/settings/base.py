@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'drf_yasg',
 ]
 
 MIDDLEWARE = [
@@ -125,3 +126,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 SITE_ROOT = Path(__file__).resolve().parent
 
 STATIC_ROOT = SITE_ROOT.parent / "static"
+
+SWAGGER_SETTINGS = {
+    'DEFAULT_INFO': 'artists.artists.api_info',  # Define API information
+}
+
+
+

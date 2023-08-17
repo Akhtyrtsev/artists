@@ -7,6 +7,9 @@ build:
 run:
 	sudo docker-compose -f docker-compose-local.yml up -d
 
+down:
+	sudo docker-compose -f docker-compose-local.yml down
+
 django-logs:
 	sudo docker-compose -f docker-compose-local.yml logs -f backend
 
