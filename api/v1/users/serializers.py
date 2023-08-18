@@ -29,6 +29,22 @@ class GetProfileSerializer(serializers.ModelSerializer):
         fields = ['id', 'phone_number', 'avatar_url', 'user']
 
 
+class ChangePasswordSerializer(serializers.Serializer):
+
+    old_password = serializers.CharField(max_length=128)
+    new_password = serializers.CharField(max_length=128)
+
+
+class ResetPasswordSerializer(serializers.Serializer):
+
+    email = serializers.CharField(max_length=128)
+
+
+class TokenPasswordSerializer(serializers.Serializer):
+
+    token = serializers.CharField(max_length=128)
+    new_password = serializers.CharField(max_length=128)
+
 
 
 

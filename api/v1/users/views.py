@@ -1,12 +1,14 @@
 from django.contrib.auth.models import User
-from rest_framework import mixins, viewsets
+from rest_framework import mixins, viewsets, views
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
-from .serializers import UserSerializer, ProfileSerializer, GetProfileSerializer
+from .serializers import UserSerializer, ProfileSerializer, GetProfileSerializer, ChangePasswordSerializer
 from api.models import Profile
 from django.db.utils import IntegrityError
 from rest_framework.validators import ValidationError
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
 
 
 class UserInfoViewSet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, viewsets.GenericViewSet):
@@ -46,4 +48,26 @@ class ProfileViewSet(viewsets.ModelViewSet):
         except IntegrityError:
             raise ValidationError({"detail": "This user has profile already"})
         return instance
+
+
+class ChangePasswordView(views.APIView):
+
+    permission_classes = (IsAuthenticated, )
+
+    @swagger_auto_schema(request_body=openapi.Schema(
+        type='object',
+        properties={
+            'old_password': openapi.Schema(type="string", description='Old password'),
+            'new_password': openapi.Schema(type="string", description='New password'),
+        }
+    ))
+    def post(self, request, *args, **kwargs):
+        serializer = ChangePasswordSerializer(data=request.data)
+        serializer.is_valid()
+        user = request.user
+        if user.check_password(serializer.data['old_password']):
+            user.set_password(serializer.data['new_password'])
+            return Response({"message": "Password was changed successfully"}, status=status.HTTP_200_OK)
+        else:
+            raise ValidationError({"message": "Old password is not correct"})
 

@@ -16,5 +16,10 @@ class Profile(WithCreatedUpdated):
         return f"Profile: {self.user.email} "
 
 
+class UserTokenPassword(WithCreatedUpdated):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    token = models.CharField(max_length=128)
 
+    def __str__(self):
+        return f"User: {self.user.email} Token: {self.token}"
 

@@ -50,3 +50,8 @@ REST_FRAMEWORK = {
 
     ),
 }
+
+# settings.py
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+DEFAULT_FROM_EMAIL = 'webmaster@example.com'  # Replace with your desired sender email
