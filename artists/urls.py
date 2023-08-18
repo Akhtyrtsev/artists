@@ -22,7 +22,7 @@ from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 from api.v1.auth import urls as v1_auth_urls
-
+from api.v1.users import urls as v1_users_urls
 schema_view = get_schema_view(
     openapi.Info(
         title="Your API",
@@ -41,5 +41,6 @@ urlpatterns = [
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     path('silk/', include('silk.urls', namespace='silk')),
     path('api/', include(v1_auth_urls)),
+    path('api/', include(v1_users_urls)),
 
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

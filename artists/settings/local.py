@@ -41,3 +41,12 @@ SILKY_MAX_RECORDED_REQUESTS_CHECK_PERCENT = 10  # Percentage of requests to chec
 SILKY_MAX_RECORDED_REQUESTS_AGE = 60 * 60  # Set the maximum age of recorded requests (in seconds)
 
 SILKY_PYTHON_PROFILER_RESULT_PATH = os.path.join(BASE_DIR, 'silk_profiles/')
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        'rest_framework.authentication.BasicAuthentication'
+
+    ),
+}
