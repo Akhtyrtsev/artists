@@ -28,6 +28,9 @@ migrate:
 shell:
 	sudo docker exec -it artists_backend python manage.py shell
 
+test:
+	sudo docker exec -it artists_backend python manage.py test api.tests --settings=artists.settings.testing
+
 
 
 

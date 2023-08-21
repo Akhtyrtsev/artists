@@ -20,7 +20,7 @@ services:
       - postgres
     volumes:
       - staticRoot:/artists/artists/static
-      - .:/code/
+      - .:/app/
     expose:
       - "8000"
     ports:
@@ -45,7 +45,7 @@ services:
       - redis
     volumes:
       - staticRoot:/artists/artists/static
-      - .:/code/
+      - .:/app/
   flower:
     command: celery -A artists flower --basic_auth=admin:admin
     restart: always
@@ -70,7 +70,7 @@ services:
     volumes:
       - artists_static_volume:/artists/artists/static
       - artists_media_volume:/artists/media
-      - .:/code/
+      - .:/app/
 
   celery-beat:
     command: celery -A artists beat -l info
@@ -88,7 +88,7 @@ services:
       - rabbit
       - redis
     volumes:
-      - .:/code
+      - .:/app
 
 
   rabbit:

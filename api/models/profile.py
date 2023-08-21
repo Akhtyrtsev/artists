@@ -19,6 +19,7 @@ class Profile(WithCreatedUpdated):
 class UserTokenPassword(WithCreatedUpdated):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     token = models.CharField(max_length=128)
+    is_valid = models.BooleanField(default=True)
 
     def __str__(self):
         return f"User: {self.user.email} Token: {self.token}"

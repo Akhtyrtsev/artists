@@ -61,11 +61,3 @@ DEFAULT_FROM_EMAIL = 'webmaster@example.com'  # Replace with your desired sender
 
 
 PASSWORD_RESET_LINK_LIFE = 24 # password reset link life time in hours
-
-sentry_sdk.init(
-    dsn=os.environ.get("SENTRY_DSN"),
-    integrations=[DjangoIntegration()],
-    send_default_pii=True,
-    traces_sample_rate=1.0,
-    profiles_sample_rate=1.0,
-)

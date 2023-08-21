@@ -2,10 +2,10 @@ FROM python:3.10
 
 ENV PYTHONUNBUFFERED 1
 
-RUN mkdir /code
+RUN mkdir /app
 
-WORKDIR /code
+WORKDIR /app
 
-COPY . /code/
+COPY . /app/
 RUN pip install --upgrade pip
 RUN pip install -r requirements/local.txt
