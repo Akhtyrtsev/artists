@@ -3,10 +3,11 @@ from .views import UserInfoViewSet, ProfileViewSet, ChangePasswordView, Password
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 
+app_name = 'users'
 
 router = DefaultRouter()
-router.register(r'users', UserInfoViewSet,basename="user")
-router.register(r'profiles', ProfileViewSet,basename="profile")
+router.register(r'users', UserInfoViewSet, basename="user")
+router.register(r'profiles', ProfileViewSet, basename="profile")
 
 urlpatterns = [
     path('v1/', include(router.urls)),
