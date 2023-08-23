@@ -19,6 +19,13 @@ class ProfileSerializer(serializers.ModelSerializer):
         model = Profile
         fields = ['id', 'phone_number', 'avatar_url', 'user']
 
+class SlimProfileSerializer(serializers.ModelSerializer):
+    id = serializers.CharField(read_only=True)
+
+    class Meta:
+        model = Profile
+        fields = ['id', 'phone_number', 'avatar_url']
+
 
 class GetProfileSerializer(serializers.ModelSerializer):
     id = serializers.CharField(read_only=True)
@@ -46,6 +53,10 @@ class TokenPasswordSerializer(serializers.Serializer):
     new_password = serializers.CharField(max_length=128)
 
 
+class UserWithProfileSerializer(serializers.ModelSerializer):
+    id = serializers.CharField(read_only=True)
+    profile = SlimProfileSerializer(read_only=True, many=False)
 
-
-
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'email', 'first_name', 'last_name', 'profile']

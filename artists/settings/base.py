@@ -158,3 +158,6 @@ CELERY_BROKER_URL = os.environ.get("CELERY_BROKER_URL")
 CELERY_RESULT_BACKEND = os.environ.get("CELERY_RESULT_BACKEND")
 RABBIT_USERNAME = os.environ.get("RABBIT_USERNAME")
 RABBIT_PASSWORD = os.environ.get("RABBIT_USERNAME")
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
