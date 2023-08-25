@@ -2,7 +2,7 @@
 
 import factory
 from django.contrib.auth.models import User, Group
-from api.models import Profile
+from api.models import Profile, Project, ProjectMedia
 
 
 class GroupFactory(factory.django.DjangoModelFactory):
@@ -27,3 +27,22 @@ class ProfileFactory(factory.django.DjangoModelFactory):
     phone_number = factory.Sequence(lambda n: 10*10+n)
     avatar_url = factory.Sequence(lambda n: f"http://host/{n}")
     user = factory.SubFactory(UserFactory)
+
+
+class ProjectFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = Project
+
+    name = factory.Sequence(lambda n: f"Name: {n}")
+    description = factory.Sequence(lambda n: f"Description: {n}")
+    client = factory.SubFactory(UserFactory)
+    artist = factory.SubFactory(UserFactory)
+
+
+class ProjectMediaFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = ProjectMedia
+    file = factory.django.FileField(filename='image.png')
+    project = factory.SubFactory(ProjectFactory)
+    name = factory.Sequence(lambda n: f"Name: {n}")
+

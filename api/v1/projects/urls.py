@@ -11,5 +11,5 @@ router.register(r'artist-projects', ArtistProjectViewSet, basename="artist-proje
 
 urlpatterns = [
     path('v1/', include(router.urls)),
-    path('v1/upload-media', CreateProjectMediaView.as_view())
+    path('v1/upload-media', CreateProjectMediaView.as_view(), name="upload-media")
 ]
