@@ -2,7 +2,12 @@ from rest_framework import viewsets, views, mixins, generics
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
-from .serializers import GetClientProjectSerializer, ClientProjectSerializer, GetArtistProjectSerializer, ProjectMediaSerializer
+from .serializers import (
+    GetClientProjectSerializer,
+    ClientProjectSerializer,
+    GetArtistProjectSerializer,
+    ProjectMediaSerializer,
+)
 from api.models import Project, ProjectMedia
 from django.db.utils import IntegrityError
 from rest_framework.validators import ValidationError
@@ -15,7 +20,6 @@ from api.permissions import IsClient, IsArtist
 
 
 class ClientProjectViewSet(viewsets.ModelViewSet):
-
     permission_classes = (IsAuthenticated, IsClient)
     serializer_class = ClientProjectSerializer
 
@@ -23,7 +27,6 @@ class ClientProjectViewSet(viewsets.ModelViewSet):
         if self.action == "create":
             return ClientProjectSerializer
         return GetClientProjectSerializer
-
 
     def get_queryset(self):
         return Project.objects.filter(client__id=self.request.user.id)
@@ -36,7 +39,7 @@ class ClientProjectViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         # Add new data to the serializer's validated data
-        new_data = {'client': self.request.user}
+        new_data = {"client": self.request.user}
         serializer.validated_data.update(new_data)
         try:
             instance = serializer.save()
@@ -45,8 +48,9 @@ class ClientProjectViewSet(viewsets.ModelViewSet):
         return instance
 
 
-class ArtistProjectViewSet(mixins.RetrieveModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet):
-
+class ArtistProjectViewSet(
+    mixins.RetrieveModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet
+):
     permission_classes = (IsAuthenticated,)
     serializer_class = GetArtistProjectSerializer
 
@@ -62,7 +66,9 @@ class CreateProjectMediaView(generics.CreateAPIView):
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        project = Project.objects.filter(client=request.user, id=serializer.validated_data['project'].id).exists()
+        project = Project.objects.filter(
+            client=request.user, id=serializer.validated_data["project"].id
+        ).exists()
         if not project:
             raise ValidationError({"message": "Cannot upload media. Unknown project"})
         instance = self.perform_create(serializer)

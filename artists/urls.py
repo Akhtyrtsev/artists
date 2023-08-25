@@ -24,10 +24,11 @@ from drf_yasg import openapi
 from api.v1.auth import urls as v1_auth_urls
 from api.v1.users import urls as v1_users_urls
 from api.v1.projects import urls as v1_projects_urls
+
 schema_view = get_schema_view(
     openapi.Info(
         title="Your API",
-        default_version='v1',
+        default_version="v1",
         description="Your API description",
         terms_of_service="https://www.example.com/terms/",
         contact=openapi.Contact(email="contact@example.com"),
@@ -36,17 +37,26 @@ schema_view = get_schema_view(
     public=True,
     permission_classes=[permissions.AllowAny],
 )
-app_name = 'api'
+app_name = "api"
 
-urlpatterns = ([
-    path('admin/', admin.site.urls),
-    re_path(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),
-    path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
-    path('silk/', include('silk.urls', namespace='silk')),
-    path('api/', include(v1_auth_urls, namespace="auth")),
-    path('api/', include(v1_users_urls, namespace='users')),
-    path('api/', include(v1_projects_urls, namespace='projects')),
-
-]) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+urlpatterns = (
+    [
+        path("admin/", admin.site.urls),
+        re_path(
+            r"^swagger(?P<format>\.json|\.yaml)$",
+            schema_view.without_ui(cache_timeout=0),
+            name="schema-json",
+        ),
+        path(
+            "swagger/",
+            schema_view.with_ui("swagger", cache_timeout=0),
+            name="schema-swagger-ui",
+        ),
+        path("silk/", include("silk.urls", namespace="silk")),
+        path("api/", include(v1_auth_urls, namespace="auth")),
+        path("api/", include(v1_users_urls, namespace="users")),
+        path("api/", include(v1_projects_urls, namespace="projects")),
+    ]
+) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

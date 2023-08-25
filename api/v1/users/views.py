@@ -5,7 +5,14 @@ from rest_framework import mixins, viewsets, views
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
-from .serializers import UserSerializer, ProfileSerializer, GetProfileSerializer, ChangePasswordSerializer, TokenPasswordSerializer, ResetPasswordSerializer
+from .serializers import (
+    UserSerializer,
+    ProfileSerializer,
+    GetProfileSerializer,
+    ChangePasswordSerializer,
+    TokenPasswordSerializer,
+    ResetPasswordSerializer,
+)
 from api.tasks import send_email
 from api.models import Profile, UserTokenPassword
 from django.db.utils import IntegrityError
@@ -17,8 +24,9 @@ from django.conf import settings
 from django.utils import timezone
 
 
-class UserInfoViewSet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, viewsets.GenericViewSet):
-
+class UserInfoViewSet(
+    mixins.RetrieveModelMixin, mixins.UpdateModelMixin, viewsets.GenericViewSet
+):
     permission_classes = (IsAuthenticated,)
     serializer_class = UserSerializer
 
@@ -27,7 +35,6 @@ class UserInfoViewSet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, viewse
 
 
 class ProfileViewSet(viewsets.ModelViewSet):
-
     permission_classes = (IsAuthenticated,)
     serializer_class = ProfileSerializer
 
@@ -47,7 +54,7 @@ class ProfileViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         # Add new data to the serializer's validated data
-        new_data = {'user': self.request.user}
+        new_data = {"user": self.request.user}
         serializer.validated_data.update(new_data)
         try:
             instance = serializer.save()
@@ -57,74 +64,94 @@ class ProfileViewSet(viewsets.ModelViewSet):
 
 
 class ChangePasswordView(views.APIView):
+    permission_classes = (IsAuthenticated,)
 
-    permission_classes = (IsAuthenticated, )
-
-    @swagger_auto_schema(request_body=openapi.Schema(
-        type='object',
-        properties={
-            'old_password': openapi.Schema(type="string", description='Old password'),
-            'new_password': openapi.Schema(type="string", description='New password'),
-        }
-    ))
+    @swagger_auto_schema(
+        request_body=openapi.Schema(
+            type="object",
+            properties={
+                "old_password": openapi.Schema(
+                    type="string", description="Old password"
+                ),
+                "new_password": openapi.Schema(
+                    type="string", description="New password"
+                ),
+            },
+        )
+    )
     def post(self, request, *args, **kwargs):
         serializer = ChangePasswordSerializer(data=request.data)
         serializer.is_valid()
         user = request.user
-        if user.check_password(serializer.data['old_password']):
-            user.set_password(serializer.data['new_password'])
-            return Response({"message": "Password was changed successfully"}, status=status.HTTP_200_OK)
+        if user.check_password(serializer.data["old_password"]):
+            user.set_password(serializer.data["new_password"])
+            return Response(
+                {"message": "Password was changed successfully"},
+                status=status.HTTP_200_OK,
+            )
         else:
             raise ValidationError({"message": "Old password is not correct"})
 
 
 class PasswordResetRequestView(views.APIView):
-
-    @swagger_auto_schema(request_body=openapi.Schema(
-        type='object',
-        properties={
-            'email': openapi.Schema(type="string", description='email'),
-        }
-    ))
+    @swagger_auto_schema(
+        request_body=openapi.Schema(
+            type="object",
+            properties={
+                "email": openapi.Schema(type="string", description="email"),
+            },
+        )
+    )
     def post(self, request, *args, **kwargs):
         serializer = ResetPasswordSerializer(data=request.data)
         serializer.is_valid()
-        user = User.objects.filter(email=serializer.data['email']).last()
+        user = User.objects.filter(email=serializer.data["email"]).last()
         if not user:
             raise ValidationError({"message": "User with this email doesn't exist"})
 
         token = str(uuid4())
         UserTokenPassword.objects.create(user=user, token=token)
-        send_email.delay(subject="Password Reset", recipient_list=[user.email],
-                         template_name="/app/api/templates/email_templates/password_reset_email.html",
-                         context={"recipient_name": f"{user.first_name}",
-                                  "link": f"{settings.FRONTEND_URL}?token={token}"})
+        send_email.delay(
+            subject="Password Reset",
+            recipient_list=[user.email],
+            template_name="/app/api/templates/email_templates/password_reset_email.html",
+            context={
+                "recipient_name": f"{user.first_name}",
+                "link": f"{settings.FRONTEND_URL}?token={token}",
+            },
+        )
 
         return Response({"message": "Reset Password Email was sent"})
 
 
 class PasswordResetConfirmView(views.APIView):
-
-    @swagger_auto_schema(request_body=openapi.Schema(
-        type='object',
-        properties={
-            'new_password': openapi.Schema(type="string", description='new_password'),
-            'token': openapi.Schema(type="string", description='token'),
-        }
-    ))
+    @swagger_auto_schema(
+        request_body=openapi.Schema(
+            type="object",
+            properties={
+                "new_password": openapi.Schema(
+                    type="string", description="new_password"
+                ),
+                "token": openapi.Schema(type="string", description="token"),
+            },
+        )
+    )
     def post(self, request, *args, **kwargs):
         serializer = TokenPasswordSerializer(data=request.data)
         serializer.is_valid()
-        user_token = UserTokenPassword.objects.filter(token=serializer.data['token'],
-                                                      created__gt=timezone.now()-datetime.timedelta(hours=24),
-                                                      is_valid=True).last()
+        user_token = UserTokenPassword.objects.filter(
+            token=serializer.data["token"],
+            created__gt=timezone.now() - datetime.timedelta(hours=24),
+            is_valid=True,
+        ).last()
         if not user_token:
-            raise ValidationError({"message": "Reset password token is invalid or expired"})
+            raise ValidationError(
+                {"message": "Reset password token is invalid or expired"}
+            )
 
         user = user_token.user
-        user.set_password(serializer.data['new_password'])
+        user.set_password(serializer.data["new_password"])
         user.save()
         user_token.is_valid = False
         user_token.save()
         return Response({"message": "Password was reset"})
-

@@ -11,7 +11,7 @@ class UserRegistrationView(CreateAPIView):
 
     def perform_create(self, serializer):
         user = serializer.save()
-        user.set_password(serializer.validated_data['password'])
-        group = Group.objects.filter(name='client').last()
+        user.set_password(serializer.validated_data["password"])
+        group = Group.objects.filter(name="client").last()
         user.groups.add(group)
         user.save()

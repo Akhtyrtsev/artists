@@ -4,15 +4,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('api', '0004_usertokenpassword'),
+        ("api", "0004_usertokenpassword"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='usertokenpassword',
-            name='is_valid',
+            model_name="usertokenpassword",
+            name="is_valid",
             field=models.BooleanField(default=True),
         ),
     ]

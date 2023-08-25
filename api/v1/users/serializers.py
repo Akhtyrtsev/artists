@@ -8,23 +8,26 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id', 'username', 'email', 'first_name', 'last_name']
+        fields = ["id", "username", "email", "first_name", "last_name"]
 
 
 class ProfileSerializer(serializers.ModelSerializer):
     id = serializers.CharField(read_only=True)
-    user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), required=False)
+    user = serializers.PrimaryKeyRelatedField(
+        queryset=User.objects.all(), required=False
+    )
 
     class Meta:
         model = Profile
-        fields = ['id', 'phone_number', 'avatar_url', 'user']
+        fields = ["id", "phone_number", "avatar_url", "user"]
+
 
 class SlimProfileSerializer(serializers.ModelSerializer):
     id = serializers.CharField(read_only=True)
 
     class Meta:
         model = Profile
-        fields = ['id', 'phone_number', 'avatar_url']
+        fields = ["id", "phone_number", "avatar_url"]
 
 
 class GetProfileSerializer(serializers.ModelSerializer):
@@ -33,22 +36,19 @@ class GetProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Profile
-        fields = ['id', 'phone_number', 'avatar_url', 'user']
+        fields = ["id", "phone_number", "avatar_url", "user"]
 
 
 class ChangePasswordSerializer(serializers.Serializer):
-
     old_password = serializers.CharField(max_length=128)
     new_password = serializers.CharField(max_length=128)
 
 
 class ResetPasswordSerializer(serializers.Serializer):
-
     email = serializers.CharField(max_length=128)
 
 
 class TokenPasswordSerializer(serializers.Serializer):
-
     token = serializers.CharField(max_length=128)
     new_password = serializers.CharField(max_length=128)
 
@@ -59,4 +59,4 @@ class UserWithProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id', 'username', 'email', 'first_name', 'last_name', 'profile']
+        fields = ["id", "username", "email", "first_name", "last_name", "profile"]
