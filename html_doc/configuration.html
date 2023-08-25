@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Configuration &#8212; artists  documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=4f649999" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=039e1c02" />
+    <script src="_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="_static/doctools.js?v=888ff710"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="configuration">
+<h1>Configuration<a class="headerlink" href="#configuration" title="Link to this heading">¶</a></h1>
+<p>Configure your project using environment variables and settings.</p>
+<section id="environment-variables">
+<h2>Environment Variables<a class="headerlink" href="#environment-variables" title="Link to this heading">¶</a></h2>
+<div class="line-block">
+<div class="line">Variable Name | Description</div>
+</div>
+<div class="line-block">
+<div class="line">DJANGO_SETTINGS_MODULE  | Your settings module. <cite>artists.settings.local</cite> for local environment |</div>
+<div class="line">SECRET_KEY              | Secret key for your Django project. Keep it secret! |</div>
+<div class="line">DB_USER                 | Your database user <cite>artists</cite> for current docker-compose configuration |</div>
+<div class="line">DB_PASS                 | Your database user password <cite>artists</cite> for current docker-compose configuration |</div>
+<div class="line">DB_NAME                 | Your database name <cite>artists</cite> for current docker-compose configuration |</div>
+<div class="line">DB_HOST                 | Your database host <cite>postgres</cite> for current docker-compose configuration |</div>
+<div class="line">DB_PORT                 | Your database port <cite>5432</cite> for current docker-compose configuration |</div>
+<div class="line">CELERY_RESULT_BACKEND   | URL for storing celery results, example <cite>redis://redis:6379/0</cite> |</div>
+<div class="line">CELERY_BROKER_URL       | URL for celery broker, example <cite>amqp://admin:password&#64;rabbit:5672//?heartbeat=3600</cite> |</div>
+<div class="line">SENTRY_DSN              | DSN from your sentry account, which will be used for monitoring|</div>
+</div>
+</section>
+<section id="settings">
+<h2>Settings<a class="headerlink" href="#settings" title="Link to this heading">¶</a></h2>
+<p>Adjust your project settings in the <cite>settings</cite> module if needed. You can make a copy of
+settings.local and use it in local environment</p>
+<p><a href="#id1"><span class="problematic" id="id2">``</span></a><a href="#id3"><span class="problematic" id="id4">`</span></a>python
+# local.py</p>
+<p>DEBUG = True  # Set to False for production</p>
+<dl>
+<dt>DATABASES = {</dt><dd><dl class="simple">
+<dt>‘default’: {</dt><dd><p>‘ENGINE’: ‘django.db.backends.postgresql’,
+‘NAME’: ‘mydb’,
+‘USER’: ‘myuser’,
+‘PASSWORD’: ‘mypassword’,
+‘HOST’: ‘localhost’,
+‘PORT’: ‘5432’,</p>
+</dd>
+</dl>
+<p>}</p>
+</dd>
+</dl>
+<p>}</p>
+<p>SECRET_KEY = ‘your-secret-key’</p>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">artists</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2023, Illia Akhtyrtsev.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 7.2.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+      |
+      <a href="_sources/configuration.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
